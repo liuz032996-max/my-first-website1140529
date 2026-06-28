@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sequential Circuit Design Pro</title>
-    <!-- Bootstrap 5 -->
+    <title>Sequential Circuit Design Pro 1140529</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; position: relative; overflow-x: hidden; }
         .sidebar { background-color: #ffffff; padding: 20px; border-right: 1px solid #ddd; min-height: 100vh; }
         .content-area { padding: 20px; min-height: 100vh; }
         .section-card { border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin-bottom: 20px; background-color: #fcfcfc; }
         .section-title { font-size: 0.9rem; font-weight: bold; color: #555; margin-bottom: 15px; text-transform: uppercase; }
         
-        /* 🚀 關鍵修復：卡諾圖強制絕對尺寸控制，隔離 Bootstrap 影響 */
+        /* 卡諾圖與精準 SVG 圈選框樣式 */
         .kmap-wrapper { position: relative; display: inline-block; margin-top: 10px; }
-        .kmap-table { table-layout: fixed; border-collapse: collapse; background: #fff; margin: 0 auto; border: 1px solid #ccc; }
+        .kmap-table { table-layout: fixed; width: auto !important; border-collapse: collapse; background: #fff; margin: 0 auto; border: 1px solid #ccc; }
         .kmap-table th, .kmap-table td { 
             width: 46px !important; min-width: 46px !important; max-width: 46px !important; 
             height: 46px !important; 
@@ -25,7 +24,6 @@
             box-sizing: border-box !important; 
         }
         .kmap-table thead th, .kmap-table tbody th { background-color: #f8f9fa; font-size: 0.85rem; }
-        
         .kmap-table .diag-cell { 
             position: relative; 
             width: 76px !important; min-width: 76px !important; max-width: 76px !important; 
@@ -54,7 +52,6 @@
 
 <div class="container-fluid">
     <div class="row">
-        <!-- ════ 左側面板 (設定區) ════ -->
         <div class="col-md-4 sidebar">
             <div class="mb-4">
                 <h4 class="text-primary fw-bold mb-1" style="display: flex; align-items: center;">
@@ -84,27 +81,33 @@
             </div>
 
             <div class="section-card">
-                <div class="section-title" data-i18n="secFFType">2. Flip-Flop Type</div>
+                <div class="section-title" data-i18n="secFFType">2. Flip-Flop / Latch Type</div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="ffType" id="jkFF" value="JK" checked>
-                    <label class="form-check-label" for="jkFF">JK</label>
+                    <label class="form-check-label" for="jkFF">JK FF</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="ffType" id="tFF" value="T">
-                    <label class="form-check-label" for="tFF">T</label>
+                    <label class="form-check-label" for="tFF">T FF</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="ffType" id="dFF" value="D">
-                    <label class="form-check-label" for="dFF">D</label>
+                    <label class="form-check-label" for="dFF">D FF</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="ffType" id="srFF" value="SR_FF">
+                    <label class="form-check-label" for="srFF">SR FF</label>
                 </div>
             </div>
 
             <div class="section-card">
                 <div class="section-title" data-i18n="secStateTable">3. State Configuration</div>
+                
                 <div class="mb-3 p-2 bg-light border rounded">
                     <label class="form-label text-dark small fw-bold" data-i18n="varNameLabel">State Var Names (MSB → LSB)</label>
-                    <input type="text" id="stateVarNamesInput" class="form-control form-control-sm border-secondary" placeholder="e.g. D C B A 或 3210">
+                    <input type="text" id="stateVarNamesInput" class="form-control form-control-sm border-secondary" placeholder="e.g. D C B A 或 3210 (留空自動預設)">
                 </div>
+
                 <div class="mb-3">
                     <label class="form-label text-muted small fw-bold text-primary" data-i18n="customAssignLabel">Custom State Assignment</label>
                     <input type="text" id="customStateMapping" class="form-control form-control-sm border-primary" placeholder="e.g., A=00, B=01, C=11">
@@ -136,8 +139,8 @@
             <button type="button" class="btn btn-outline-primary btn-lg w-100 fw-bold mb-4" id="btnExport" onclick="exportReport()" data-i18n="btnExport">📥 下載設計報告 (圖片)</button>
         </div>
 
-        <!-- ════ 右側面板 (輸出區) ════ -->
         <div class="col-md-8 content-area">
+            
             <div class="mb-4">
                 <h4 class="fw-bold mb-1" data-i18n="outTitleMain">計算輸出</h4>
                 <div class="text-secondary fw-bold" style="font-size: 0.85rem;" data-i18n="outTitleSub">1140529劉育佐</div>
@@ -146,11 +149,11 @@
             <div id="errorMsg" class="alert alert-danger d-none fw-bold"></div>
 
             <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-white font-weight-bold text-primary" data-i18n="eqCardTitle">1. FLIP-FLOP INPUT EQUATIONS</div>
+                <div class="card-header bg-white font-weight-bold text-primary" data-i18n="eqCardTitle">1. FLIP-FLOP / LATCH INPUT EQUATIONS</div>
                 <div class="card-body">
                     <p><strong data-i18n="stateVarsLabel">State Assignment used: </strong> <span id="stateVarsInfo" class="text-danger font-weight-bold"></span></p>
                     <table class="table table-bordered text-center" id="equationTable">
-                        <thead class="table-light"><tr><th data-i18n="tblFF" style="width:15%">Flip-Flop</th><th data-i18n="tblInput" style="width:15%">Input</th><th data-i18n="tblEq">Equation (Color Coded)</th></tr></thead>
+                        <thead class="table-light"><tr><th data-i18n="tblFF" style="width:20%">Type Label</th><th data-i18n="tblInput" style="width:15%">Input Pin</th><th data-i18n="tblEq">Equation (Color Coded)</th></tr></thead>
                         <tbody id="equationTableBody"></tbody>
                     </table>
                 </div>
@@ -210,34 +213,34 @@
             appTitleMain: "Circuit Design Pro", appTitleSub: "1140529 Liu Yu-Zuo",
             secProblem: "0. Smart Local Parser", btnParse: "✨ Auto Parse & Generate", 
             secModelType: "1. Model Type", mealyLabel: "Mealy Model", mooreLabel: "Moore Model", 
-            secFFType: "2. Flip-Flop Type", secStateTable: "3. State Configuration", customAssignLabel: "Custom State Assignment (Optional)", varNameLabel: "State Var Names (MSB → LSB)",
+            secFFType: "2. Flip-Flop / Latch Type", customAssignLabel: "Custom State Assignment (Optional)", varNameLabel: "State Var Names (MSB → LSB)",
             inputVarLabel: "Input", outputVarLabel: "Output", psHead: "PS", nsHead: "NS", actHead: "Act", 
             btnAddRow: "+ Add Row", btnClear: "Clear", btnLoad: "Load Example", btnGenerate: "GENERATE SYSTEM", btnExport: "📥 Download Report (PNG)", 
             outTitleMain: "Outputs", outTitleSub: "1140529 Liu Yu-Zuo", 
-            eqCardTitle: "1. FLIP-FLOP INPUT EQUATIONS", stateVarsLabel: "State Assignment used: ", 
-            tblFF: "Flip-Flop", tblInput: "Input", tblEq: "Equation (Color Coded)", kmapCardTitle: "2. KARNAUGH MAPS (With Dynamic Grouping)", 
+            eqCardTitle: "1. FLIP-FLOP / LATCH INPUT EQUATIONS", stateVarsLabel: "State Assignment used: ", 
+            tblFF: "Type Label", tblInput: "Input Pin", tblEq: "Equation (Color Coded)", kmapCardTitle: "2. KARNAUGH MAPS (With Dynamic Grouping)", 
             circuitCardTitle: "3. SEQUENTIAL CIRCUIT DIAGRAM", stateDiagramTitle: "4. STATE DIAGRAM", simTitle: "5. SEQUENCE SIMULATION (TRACE)", 
             msgWaitGen: "Generate to view results.", simBtn: "Simulate", simCol1: "Clock", simCol3: "Input (X)", simCol5: "Output (Z)",
-            probPlaceholder: "Paste your textbook problem here...", simPlaceholder: "Enter X sequence (e.g., 1001011)",
+            probPlaceholder: "Paste your textbook problem here...\ne.g., Design a Mealy Model using D Flip-Flop...\nTransitions: A 0 B 0...", simPlaceholder: "Enter X sequence (e.g., 1001011)",
             aiThinking: "Analyzing text...", aiSuccess: "✓ Success! Parsed ", aiFail: "✕ Parse failed: ", exporting: "⏳ Generating...", exportFail: "Export failed: "
         },
         zh: { 
             appTitleMain: "循序電路自動化設計 Pro", appTitleSub: "1140529劉育佐",
             secProblem: "0. 智慧在地解析器 (免 API Key)", btnParse: "✨ 智慧解析並自動生成", 
             secModelType: "1. 模型種類", mealyLabel: "Mealy Model", mooreLabel: "Moore Model (Z僅依賴狀態)", 
-            secFFType: "2. 正反器種類", secStateTable: "3. 狀態表配置", customAssignLabel: "自訂狀態編碼 (可選)", varNameLabel: "自訂變數名稱 (高位元 → 低位元)",
+            secFFType: "2. 正反器 / 鎖存器種類", secStateTable: "3. 狀態表配置", customAssignLabel: "自訂狀態編碼 (可選)", varNameLabel: "自訂變數名稱 (高位元 → 低位元)",
             inputVarLabel: "輸入變數", outputVarLabel: "輸出變數", psHead: "現態", nsHead: "次態", actHead: "動作", 
             btnAddRow: "+ 新增一列", btnClear: "清空", btnLoad: "載入範例", btnGenerate: "產生系統 (GENERATE)", btnExport: "📥 下載設計報告 (圖片)", 
             outTitleMain: "計算輸出", outTitleSub: "1140529劉育佐", 
-            eqCardTitle: "1. 正反器輸入方程式", stateVarsLabel: "使用的狀態編碼： ", 
-            tblFF: "正反器", tblInput: "接腳", tblEq: "方程式 (色彩對應卡諾圖圈選)", kmapCardTitle: "2. 卡諾圖與化簡圈選", 
+            eqCardTitle: "1. 正反器 / 鎖存器輸入方程式", stateVarsLabel: "使用的狀態編碼： ", 
+            tblFF: "元件種類", tblInput: "接腳名稱", tblEq: "方程式 (色彩對應卡諾圖圈選)", kmapCardTitle: "2. 卡諾圖與化簡圈選", 
             circuitCardTitle: "3. 循序電路圖 (完美拉線與防重疊)", stateDiagramTitle: "4. 狀態轉移圖 (STATE DIAGRAM)", simTitle: "5. 序列模擬與追蹤 (TRACE)", 
             msgWaitGen: "請點擊 Generate 產生結果。", simBtn: "開始模擬", simCol1: "時脈", simCol3: "輸入 (X)", simCol5: "輸出 (Z)",
             probPlaceholder: "貼上課本題目，例如：\nDesign a Mealy Model using D Flip-Flop...\nA=00, B=01...\nA 0 B 0...", simPlaceholder: "輸入 X 序列 (例如: 10010110)",
             aiThinking: "分析與解析中...", aiSuccess: "✓ 解析完成！抓取到 ", aiFail: "✕ 解析失敗: ", exporting: "⏳ 產生圖片中...", exportFail: "匯出失敗: "
         }
     };
-    
+
     let currentLang = 'zh';
     function changeLanguage(lang) { 
         currentLang = lang; 
@@ -289,7 +292,7 @@
         const traceHtml = document.getElementById('simTableWrapper').style.display === 'block' ? document.getElementById('simTableData').outerHTML : '<p style="color:#999; text-align:center; padding: 20px;">No simulation trace generated.</p>';
 
         const modelInfo = document.querySelector('input[name="modelType"]:checked').value + ' Model';
-        const ffInfo = document.querySelector('input[name="ffType"]:checked').value + ' Flip-Flop';
+        const ffInfo = document.querySelector('input[name="ffType"]:checked').value.replace('_', ' ');
         const stateInfo = document.getElementById('stateVarsInfo').innerHTML || 'Auto';
         const rTitleMain = currentLang === 'zh' ? '循序電路設計報告' : 'Sequential Circuit Design Report';
         const rTitleSub = currentLang === 'zh' ? '1140529劉育佐' : '1140529 Liu Yu-Zuo';
@@ -316,7 +319,7 @@
                 const link = document.createElement('a'); link.download = 'Circuit_Design_Report.png'; link.href = canvas.toDataURL('image/png'); link.click();
                 document.body.removeChild(reportDiv); btn.innerHTML = origText; btn.disabled = false;
             }).catch(e => { alert(i18n[currentLang].exportFail + e.message); document.body.removeChild(reportDiv); btn.innerHTML = origText; btn.disabled = false; });
-        }, 500); 
+        }, 800); 
     }
 
     function smartLocalParse() {
@@ -326,7 +329,10 @@
         setTimeout(() => {
             try {
                 if (/moore/i.test(text)) document.getElementById('mooreModel').checked = true; else if (/mealy/i.test(text)) document.getElementById('mealyModel').checked = true;
-                if (/\bD\s*[- ]*(?:flip|ff|型|正反器)/i.test(text)) document.getElementById('dFF').checked = true; else if (/\bT\s*[- ]*(?:flip|ff|型|正反器)/i.test(text)) document.getElementById('tFF').checked = true; else if (/jk/i.test(text)) document.getElementById('jkFF').checked = true;
+                if (/\bD\s*[- ]*(?:flip|ff|型|正反器)/i.test(text)) document.getElementById('dFF').checked = true; 
+                else if (/\bT\s*[- ]*(?:flip|ff|型|正反器)/i.test(text)) document.getElementById('tFF').checked = true; 
+                else if (/jk/i.test(text)) document.getElementById('jkFF').checked = true;
+                else if (/sr\s*(latch|ff)/i.test(text)) document.getElementById('srFF').checked = true;
 
                 let assignments = []; const lines = text.split('\n').map(l => l.trim()).filter(l => l);
                 const assignRegex1 = /(?:^|[\s,])([a-zA-Z0-9_]+)\s*[=:]\s*([01]{2,})(?:$|[\s,])/gi; let match; while ((match = assignRegex1.exec(text)) !== null) assignments.push(`${match[1]}=${match[2]}`);
@@ -448,9 +454,8 @@
         svgs += `</svg>`; return svgs;
     }
 
-    function cellCls(v) { return v==='1'?'text-success fw-bold':v==='X'?'text-warning fw-bold':'text-muted'; }
+    function cellCls(v) { return v==='1'?'text-success fw-bold bg-light':v==='X'?'text-warning fw-bold bg-light':'text-muted'; }
 
-    // 🏆 強制綁定寬高的渲染函數
     function render1VarKMap(target, data, vars, masks) { 
         let W = 92, H = 138; let svg = buildKMapSVGOverlay(masks, 1, W, H);
         return `<div class="col-md-6 mb-4 d-flex flex-column align-items-center"><h6 class="text-center font-weight-bold mb-2 text-primary" style="font-size:1.1rem">${target} Map</h6><div class="kmap-wrapper" style="width:${W}px; height:${H}px;">${svg}<table class="kmap-table" style="width:${W}px; height:${H}px;"><thead><tr><th style="background-color: #f8f9fa;">${vars[0]}</th><th style="background-color: #f8f9fa;">Val</th></tr></thead><tbody><tr><th>0</th><td class="${cellCls(data[0])}">${data[0]}</td></tr><tr><th>1</th><td class="${cellCls(data[1])}">${data[1]}</td></tr></tbody></table></div></div>`; 
@@ -470,6 +475,7 @@
         return `<div class="col-md-6 mb-4 d-flex flex-column align-items-center"><h6 class="text-center font-weight-bold mb-2 text-primary" style="font-size:1.1rem">${target} Map</h6><div class="kmap-wrapper" style="width:${W}px; height:${H}px;">${svg}<table class="kmap-table" style="width:${W}px; height:${H}px;"><thead><tr><th class="diag-cell"><span class="var-row">${vars[0]}${vars[1]}</span><span class="var-col">${vars[2]}${vars[3]}</span></th><th>00</th><th>01</th><th>11</th><th>10</th></tr></thead><tbody>${rowsHtml}</tbody></table></div></div>`; 
     }
 
+    // 🧠 核心運算
     function generate(showError = true) {
         const errorMsg = document.getElementById('errorMsg'); errorMsg.classList.add('d-none');
         try {
@@ -500,7 +506,7 @@
             let customVarsStr = document.getElementById('stateVarNamesInput').value.trim(); let stateVarNames = [];
             if (customVarsStr) {
                 if (customVarsStr.includes(',') || customVarsStr.includes(' ')) { stateVarNames = customVarsStr.split(/[, ]+/).filter(s => s); } else { stateVarNames = customVarsStr.split(''); }
-                if (stateVarNames.length < numBits) throw new Error(`Need ${numBits} var names.`);
+                if (stateVarNames.length < numBits) throw new Error(currentLang === 'zh' ? `需要 ${numBits} 個變數，但只提供 ${stateVarNames.length} 個。` : `Need ${numBits} vars, but provided ${stateVarNames.length}.`);
                 stateVarNames = stateVarNames.slice(0, numBits);
             } else { for(let i = numBits-1; i >= 0; i--) stateVarNames.push(`Q${i}`); }
 
@@ -515,6 +521,7 @@
             for(let i=0; i<numBits; i++) { 
                 let vName = stateVarNames[i];
                 if(ffType === 'JK') { targets.push(`J_${vName}`, `K_${vName}`); truthTables[`J_${vName}`] = Array(numCombinations).fill('X'); truthTables[`K_${vName}`] = Array(numCombinations).fill('X'); } 
+                else if(ffType === 'SR_FF') { targets.push(`S_${vName}`, `R_${vName}`); truthTables[`S_${vName}`] = Array(numCombinations).fill('X'); truthTables[`R_${vName}`] = Array(numCombinations).fill('X'); }
                 else if(ffType === 'D') { targets.push(`D_${vName}`); truthTables[`D_${vName}`] = Array(numCombinations).fill('X'); } 
                 else { targets.push(`T_${vName}`); truthTables[`T_${vName}`] = Array(numCombinations).fill('X'); }
             }
@@ -526,11 +533,17 @@
 
                 for (let bit = 0; bit < numBits; bit++) {
                     const vName = stateVarNames[bit]; const q = stateEncoding[row.ps][bit]; const next_q = stateEncoding[row.ns][bit];
+                    
                     if(ffType === 'JK') {
                         if(q === '0' && next_q === '0') { truthTables[`J_${vName}`][index]='0'; truthTables[`K_${vName}`][index]='X'; }
                         else if(q === '0' && next_q === '1') { truthTables[`J_${vName}`][index]='1'; truthTables[`K_${vName}`][index]='X'; }
                         else if(q === '1' && next_q === '0') { truthTables[`J_${vName}`][index]='X'; truthTables[`K_${vName}`][index]='1'; }
                         else if(q === '1' && next_q === '1') { truthTables[`J_${vName}`][index]='X'; truthTables[`K_${vName}`][index]='0'; }
+                    } else if(ffType === 'SR_FF') {
+                        if(q === '0' && next_q === '0') { truthTables[`S_${vName}`][index]='0'; truthTables[`R_${vName}`][index]='X'; }
+                        else if(q === '0' && next_q === '1') { truthTables[`S_${vName}`][index]='1'; truthTables[`R_${vName}`][index]='0'; }
+                        else if(q === '1' && next_q === '0') { truthTables[`S_${vName}`][index]='0'; truthTables[`R_${vName}`][index]='1'; }
+                        else if(q === '1' && next_q === '1') { truthTables[`S_${vName}`][index]='X'; truthTables[`R_${vName}`][index]='0'; }
                     } else if(ffType === 'D') { truthTables[`D_${vName}`][index] = next_q; } else { truthTables[`T_${vName}`][index] = (q === next_q) ? '0' : '1'; }
                 }
             });
@@ -546,8 +559,9 @@
                 let result = solveQM(minterms, dontcares, currentVars); generatedStructs[target] = result.struct;
                 let formattedTarget = formatTargetHTML(target);
 
+                let displayLabelType = target === outputVar ? "Output" : ffType.replace('_', ' ');
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td class="align-middle">${target === outputVar ? "Output" : `FF (${target.split('_')[1]})`}</td><td class="align-middle fw-bold text-primary" style="font-size:1.2rem">${formattedTarget}</td><td class="equation-box">${formattedTarget} = ${result.stringHtml}</td>`;
+                tr.innerHTML = `<td class="align-middle">${displayLabelType}</td><td class="align-middle fw-bold text-primary" style="font-size:1.1rem">${formattedTarget}</td><td class="equation-box">${formattedTarget} = ${result.stringHtml}</td>`;
                 eqTbody.appendChild(tr);
 
                 let nv = currentVars.length;
@@ -564,6 +578,7 @@
         } catch (e) { if(showError) { errorMsg.innerText = "Error: " + e.message; errorMsg.classList.remove('d-none'); console.error(e); } }
     }
 
+    // 🎨 State Diagram 引擎 (縮小版)
     function drawStateDiagram(modelType, uniqueStates, tableData, stateEncoding, mooreMap) {
         const container = document.getElementById('stateDiagramContainer'); let states = Array.from(uniqueStates).sort(); const numStates = states.length;
         const width = 500; const height = 280; const cx = width / 2; const cy = height / 2; const r = 28; const R = numStates <= 2 ? 80 : 100; 
@@ -635,7 +650,7 @@
                 let ox = px - 40; svg += `<use href="#or-gate" x="${ox}" y="${py - 10}" /><line x1="${ox+20}" y1="${py}" x2="${px}" y2="${py}" class="wire" />`;
                 let spreadY = 32; let curStartY = py - ((numTerms - 1) * spreadY) / 2;
                 for (let i = 0; i < numTerms; i++) {
-                    let term = struct[i]; let termY = curStartY + i * spreadY; let orPinY = py - 10 + 2 + i * (16 / (numTerms - 1)); let orPinX = ox + 4; 
+                    let term = struct[i]; let termY = curStartY + i * spreadY; let orPinY = py - 10 + 2 + i * (16 / (numTerms - 1)); let orPinX = ox; 
                     if (term.length === 1) { let by = busMap[term[0]]; let routeX = ox - 15; svg += `<polyline points="${cx},${by} ${cx},${termY} ${routeX},${termY} ${routeX},${orPinY} ${orPinX},${orPinY}" class="wire" /><circle cx="${cx}" cy="${by}" r="2.5" fill="#333" />`; cx -= 12;
                     } else {
                         let ax = ox - 45; svg += `<use href="#and-gate" x="${ax}" y="${termY - 10}" />`; let routeX = ox - 10; svg += `<polyline points="${ax+20},${termY} ${routeX},${termY} ${routeX},${orPinY} ${orPinX},${orPinY}" class="wire" />`;
@@ -648,16 +663,20 @@
 
         for (let b = 0; b < numBits; b++) {
             const vName = stateVarNames[b]; const x = startX + b * spacingX; const y = startY; let cursorX = x - 110; 
-            svg += `<rect x="${x}" y="${y}" width="${boxWidth}" height="${boxHeight}" class="ff-box" /><text x="${x + boxWidth/2}" y="${y + boxHeight + 25}" text-anchor="middle" class="text-bold" font-size="16">FF (${vName})</text>`;
-            if (ffType === 'JK') {
-                svg += `<text x="${x + 10}" y="${y + 35}" class="text-pin">J</text>`; cursorX = buildGateAndRoute(x, y + 30, structs[`J_${vName}`], cursorX); const clkY = y + boxHeight / 2;
-                svg += `<polygon points="${x},${clkY-8} ${x+14},${clkY} ${x},${clkY+8}" fill="none" stroke="#333" stroke-width="2.5"/><polyline points="${x-20},${clkBaseY} ${x-20},${clkY} ${x},${clkY}" class="wire" /><circle cx="${x-20}" cy="${clkBaseY}" r="3.5" fill="#333" />`;
-                svg += `<text x="${x + 10}" y="${y + boxHeight - 25}" class="text-pin">K</text>`; cursorX = buildGateAndRoute(x, y + boxHeight - 30, structs[`K_${vName}`], cursorX);
-            } else if (ffType === 'D') {
-                svg += `<text x="${x + 10}" y="${y + 55}" class="text-pin">D</text>`; cursorX = buildGateAndRoute(x, y + 50, structs[`D_${vName}`], cursorX); const clkY = y + boxHeight / 2 + 20;
-                svg += `<polygon points="${x},${clkY-8} ${x+14},${clkY} ${x},${clkY+8}" fill="none" stroke="#333" stroke-width="2.5"/><polyline points="${x-20},${clkBaseY} ${x-20},${clkY} ${x},${clkY}" class="wire" /><circle cx="${x-20}" cy="${clkBaseY}" r="3.5" fill="#333" />`;
+            let boxLabel = ffType.replace('_', ' ');
+            svg += `<rect x="${x}" y="${y}" width="${boxWidth}" height="${boxHeight}" class="ff-box" /><text x="${x + boxWidth/2}" y="${y + boxHeight + 25}" text-anchor="middle" class="text-bold" font-size="16">${boxLabel} (${vName})</text>`;
+            
+            if (ffType === 'JK' || ffType === 'SR_FF') {
+                let p1 = ffType === 'JK' ? 'J' : 'S'; let p2 = ffType === 'JK' ? 'K' : 'R';
+                svg += `<text x="${x + 10}" y="${y + 35}" class="text-pin">${p1}</text>`; cursorX = buildGateAndRoute(x, y + 30, structs[`${p1}_${vName}`], cursorX); 
+                const clkY = y + boxHeight / 2;
+                svg += `<polygon points="${x},${clkY-8} ${x+14},${clkY} ${x},${clkY+8}" fill="none" stroke="#333" stroke-width="2.5"/>`;
+                svg += `<polyline points="${x-20},${clkBaseY} ${x-20},${clkY} ${x},${clkY}" class="wire" /><circle cx="${x-20}" cy="${clkBaseY}" r="3.5" fill="#333" />`;
+                svg += `<text x="${x + 10}" y="${y + boxHeight - 25}" class="text-pin">${p2}</text>`; cursorX = buildGateAndRoute(x, y + boxHeight - 30, structs[`${p2}_${vName}`], cursorX);
             } else {
-                svg += `<text x="${x + 10}" y="${y + 55}" class="text-pin">T</text>`; cursorX = buildGateAndRoute(x, y + 50, structs[`T_${vName}`], cursorX); const clkY = y + boxHeight / 2 + 20;
+                let pinName = ffType === 'D' ? 'D' : 'T';
+                svg += `<text x="${x + 10}" y="${y + 55}" class="text-pin">${pinName}</text>`; cursorX = buildGateAndRoute(x, y + 50, structs[`${pinName}_${vName}`], cursorX); 
+                const clkY = y + boxHeight / 2 + 20;
                 svg += `<polygon points="${x},${clkY-8} ${x+14},${clkY} ${x},${clkY+8}" fill="none" stroke="#333" stroke-width="2.5"/><polyline points="${x-20},${clkBaseY} ${x-20},${clkY} ${x},${clkY}" class="wire" /><circle cx="${x-20}" cy="${clkBaseY}" r="3.5" fill="#333" />`;
             }
             let qX = x + boxWidth; let qY = y + 30; let qBy = busMap[vName];
